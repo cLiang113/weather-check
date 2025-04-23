@@ -1,0 +1,29 @@
+name: Weather Check
+
+on:
+  schedule:
+    - cron: '0 4 * * *'   # 北京时间 12:00
+    - cron: '0 5 * * *'   # 北京时间 13:00
+    - cron: '0 6 * * *'   # 北京时间 14:00
+  workflow_dispatch:
+
+jobs:
+  weather-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+
+      - name: 设置 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+
+      - name: 执行脚本
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python weather_check.py
